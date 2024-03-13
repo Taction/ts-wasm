@@ -1,0 +1,25 @@
+{
+  "name": "@wapc/as-guest",
+  "version": "0.3.1",
+  "types": "assembly/index.ts",
+  "description": "waPC Guest Library for AssemblyScript",
+  "main": "assembly/index.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wapc/as-guest.git"
+  },
+  "author": "waPC authors",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/wapc/as-guest/issues"
+  },
+  "homepage": "https://github.com/wapc/as-guest#readme",
+  "devDependencies": {
+    "assemblyscript": "^0.20.13",
+    "visitor-as": "^0.11.4"
+  },
+  "dependencies": {
+    "assemblyscript-json": "^1.1.0",
+    "json-as": "^0.7.3"
+  }
+}

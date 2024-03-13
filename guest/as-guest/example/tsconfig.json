@@ -1,0 +1,9 @@
+{
+  "extends": "assemblyscript/std/assembly.json",
+  "options": {
+    "transform": ["json-as/transform"]
+  },
+  "include": [
+    "./**/*.ts"
+  ]
+}
