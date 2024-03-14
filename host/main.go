@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/wapc/wapc-go"
@@ -34,19 +35,22 @@ func main() {
 		panic(err)
 	}
 	defer instance.Close(ctx)
+	runserver(func(w http.ResponseWriter, r *http.Request) {
+		result, err := instance.Invoke(ctx, "hello", []byte("world")) // request path and request data
+		if err != nil {
+			panic(err)
+		}
 
-	result, err := instance.Invoke(ctx, "hello", []byte("world")) // request path and request data
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println(string(result))
-	var response Response
-	err = json.Unmarshal(result, &response)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(response)
+		fmt.Println(string(result))
+		var response Response
+		err = json.Unmarshal(result, &response)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(response)
+		w.WriteHeader(http.StatusOK)
+		w.Write(result)
+	})
 }
 
 func host(ctx context.Context, service, method, metadata string, payload []byte) ([]byte, error) {

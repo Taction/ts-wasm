@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 asc hello.ts --outFile hello.wasm --optimize
 

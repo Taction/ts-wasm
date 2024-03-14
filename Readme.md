@@ -8,6 +8,11 @@ cd host
 go run main.go
 ```
 
+Use the following command to trigger the wasm execution.
+```shell
+curl localhost:8088
+```
+
 ## build example
 ```sh
 cd as-guest/example2
