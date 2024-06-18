@@ -15,7 +15,7 @@ curl localhost:8088
 
 ## build example
 ```sh
-cd as-guest/example2
+cd guest/as-guest/example2
 ./build.sh
 ```
 will build the wasm file and copy to `host` folder.
