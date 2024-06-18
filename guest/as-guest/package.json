@@ -15,7 +15,7 @@
   },
   "homepage": "https://github.com/wapc/as-guest#readme",
   "devDependencies": {
-    "assemblyscript": "^0.20.13",
+    "assemblyscript": "^0.25.0",
     "visitor-as": "^0.11.4"
   },
   "dependencies": {

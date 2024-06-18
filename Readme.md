@@ -5,7 +5,7 @@ The ABI is defined in `wapc` project.
 ## usage
 ```sh
 cd host
-go run main.go
+go run .
 ```
 
 Use the following command to trigger the wasm execution.
@@ -13,9 +13,14 @@ Use the following command to trigger the wasm execution.
 curl localhost:8088
 ```
 
+### modify the host
+
+you can modify the `host` function under `host/host.go`. which is called by wasm when you run the wasm execution.
+
 ## build example
 ```sh
 cd guest/as-guest/example2
+npm i
 ./build.sh
 ```
 will build the wasm file and copy to `host` folder.

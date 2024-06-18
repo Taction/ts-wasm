@@ -36,6 +36,7 @@ func main() {
 	}
 	defer instance.Close(ctx)
 	runserver(func(w http.ResponseWriter, r *http.Request) {
+		// “hello” 是在ts register中注册的函数名，“world”是请求参数数据
 		result, err := instance.Invoke(ctx, "hello", []byte("world")) // request path and request data
 		if err != nil {
 			panic(err)
@@ -53,6 +54,8 @@ func main() {
 	})
 }
 
+// 可以修改这个函数观察wasm的输出.
+// 注意：除非修改了ts里的数据解析部分代码，否则这里的数据结构最好不要动。当然也可以增加case
 func host(ctx context.Context, service, method, metadata string, payload []byte) ([]byte, error) {
 	// 假装向对应的服务发送请求，并将结果返回给wasm
 	switch service {

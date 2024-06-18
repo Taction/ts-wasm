@@ -9,8 +9,9 @@ import {
 } from "../assembly";
 import { JSON,JSONEncoder } from '../node_modules/assemblyscript-json/assembly';
 
-// 注册路由和处理函数，可以被调用多次
+// 注册路由和处理函数供Host调用。这里注册hello函数，入参固定为buffer array。可以重复调用注册其他函数
 register("hello", function (payload: ArrayBuffer): Result<ArrayBuffer> {
+  // host call 最后会调用go中的host函数
   let user = hostCall("user", "get", "", payload);
   if (!user.isOk && user.error() != null) {
     // @ts-ignore
