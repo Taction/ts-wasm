@@ -3,6 +3,7 @@
     "./assembly/index.ts"
   ],
   "options": {
-    "importTable": true
+    "importTable": true,
+    "transform": ["json-as/transform"]
   }
 }

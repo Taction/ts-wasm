@@ -19,20 +19,20 @@ register("hello", function (payload: ArrayBuffer): Result<ArrayBuffer> {
   }
   consoleLogBuffer(user.get());
   let userstr = String.UTF8.decode(user.get());
-    let userJsonR = JSON.parse<UserInfo>(userstr);
-    if (!userJsonR.isOk) {
-    consoleLog("parse json error:"+(userJsonR.error() as Error).message);
-    return Result.error<ArrayBuffer>(new Error("parse json error:"));
-    }
-    let userJson = userJsonR.get();
+    let userJson = JSON.parse<UserInfo>(userstr);
+    // if (!userJsonR.isOk) {
+    // consoleLog("parse json error:"+(userJsonR.error() as Error).message);
+    // return Result.error<ArrayBuffer>(new Error("parse json error:"));
+    // }
+    // let userJson = userJsonR.get();
   consoleLog("parse user json success:"+ userJson.username);
   let access = hostCall("access", "get", "", payload);
-  let accessJsonR = JSON.parse<Access>(String.UTF8.decode(access.get()));
-    if (!accessJsonR.isOk) {
-    consoleLog("parse json error:"+(accessJsonR.error() as Error).message);
-    return Result.error<ArrayBuffer>(new Error("parse json error:"));
-    }
-    let accessJson = accessJsonR.get();
+  let accessJson = JSON.parse<Access>(String.UTF8.decode(access.get()));
+    // if (!accessJsonR.isOk) {
+    // consoleLog("parse json error:"+(accessJsonR.error() as Error).message);
+    // return Result.error<ArrayBuffer>(new Error("parse json error:"));
+    // }
+    // let accessJson = accessJsonR.get();
   let response = new Response();
   response.message = "OK";
   response.data = new ResponseData();
@@ -79,47 +79,71 @@ function abort(message: string | null, fileName: string | null, lineNumber: u32,
 //     return obj;
 //   }
 // }
-
 // 使用 MapSerializer 将 Map 转换为 JSON 对象
 // @ts-ignore
 @json
 class UserInfo {
   username: string;
   uid: string;
-  // groups: string[];
-  // extra: MapSerializer;
+  groups: string[];
 
-  // constructor(username: string, uid: string, groups: string[], extra: Map<string, string[]>) {
-  //   this.username = username;
-  //   this.uid = uid;
-  //   this.groups = groups;
-  //   this.extra = new MapSerializer(extra);
-  // }
+  constructor(username: string, uid: string, groups: string[]) {
+    this.username = username;
+    this.uid = uid;
+    this.groups = groups;
+  }
 }
+
 // @ts-ignore
 @json
 class Access {
   defaultAction: string;
   trustDomain: string;
   policies: AppPolicy[];
+
+  constructor(defaultAction: string = "", trustDomain: string = "", policies: AppPolicy[] = []) {
+    this.defaultAction = defaultAction;
+    this.trustDomain = trustDomain;
+    this.policies = policies;
+  }
 }
+
 // @ts-ignore
 @json
 class AppPolicy {
-    appId: string;
-    defaultAction: string;
-    trustDomain: string;
-    namespace: string;
+  appId: string;
+  defaultAction: string;
+  trustDomain: string;
+  namespace: string;
+
+  constructor(appId: string = "", defaultAction: string = "", trustDomain: string = "", namespace: string = "") {
+    this.appId = appId;
+    this.defaultAction = defaultAction;
+    this.trustDomain = trustDomain;
+    this.namespace = namespace;
+  }
 }
+
 // @ts-ignore
 @json
 class Response {
   message: string;
   data: ResponseData;
+
+  constructor(message: string = "", data: ResponseData = new ResponseData()) {
+    this.message = message;
+    this.data = data;
+  }
 }
+
 // @ts-ignore
 @json
 class ResponseData {
   user: UserInfo;
   access: Access;
+
+  constructor(user: UserInfo = new UserInfo("", "", []), access: Access = new Access()) {
+    this.user = user;
+    this.access = access;
+  }
 }
