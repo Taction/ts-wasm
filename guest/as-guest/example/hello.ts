@@ -19,29 +19,28 @@ register("hello", function (payload: ArrayBuffer): Result<ArrayBuffer> {
   }
   consoleLogBuffer(user.get());
   let userstr = String.UTF8.decode(user.get());
-    let userJson = JSON.parse<UserInfo>(userstr);
-    // if (!userJsonR.isOk) {
-    // consoleLog("parse json error:"+(userJsonR.error() as Error).message);
-    // return Result.error<ArrayBuffer>(new Error("parse json error:"));
-    // }
-    // let userJson = userJsonR.get();
+  let userJson = JSON.parse<UserInfo>(userstr);
   consoleLog("parse user json success:"+ userJson.username);
   let access = hostCall("access", "get", "", payload);
   let accessJson = JSON.parse<Access>(String.UTF8.decode(access.get()));
-    // if (!accessJsonR.isOk) {
-    // consoleLog("parse json error:"+(accessJsonR.error() as Error).message);
-    // return Result.error<ArrayBuffer>(new Error("parse json error:"));
-    // }
-    // let accessJson = accessJsonR.get();
+
+  let state = JSON.parse<NonFungibleToken>('{"owner":"","m":{"a":"b"},"counter":0,"tokens":{},"owners":{1:"a"},"balances":{"a":9}}');
+  consoleLog("parse map success:");
+  consoleLog(""+ state.m.get("a"));
+
   let response = new Response();
-  response.message = "OK";
   response.data = new ResponseData();
+  response.message = "OK——start";
   // @ts-ignore
   response.data.user = userJson;
   response.data.access = accessJson;
   let stringified = JSON.stringify<Response>(response);
   return Result.ok(String.UTF8.encode(stringified));
 });
+
+export function _start(): void {
+
+}
 
 // This must be present in the entry file. Do not remove.
 
@@ -79,7 +78,6 @@ function abort(message: string | null, fileName: string | null, lineNumber: u32,
 //     return obj;
 //   }
 // }
-// 使用 MapSerializer 将 Map 转换为 JSON 对象
 // @ts-ignore
 @json
 class UserInfo {
@@ -145,5 +143,54 @@ class ResponseData {
   constructor(user: UserInfo = new UserInfo("", "", []), access: Access = new Access()) {
     this.user = user;
     this.access = access;
+  }
+}
+@json
+class TokenMetaData {
+  id: u64;
+  name: string;
+  uri: string;
+
+  constructor(id: u64, name: string, uri: string) {
+    this.id = id;
+    this.name = name;
+    this.uri = uri;
+  }
+}
+@json
+class NonFungibleToken {
+  owner: string;
+  counter: u64;
+  m : Map<string,string>;
+  tokens: Map<u64, TokenMetaData>;
+  owners: Map<u64, string>;
+  balances: Map<string, u64[]>;
+
+  constructor() {
+    this.owner = "";
+    this.counter = 0;
+    this.m = new Map<string, string>();
+    this.tokens = new Map<u64, TokenMetaData>();
+    this.owners = new Map<u64, string>();
+    this.balances = new Map<string, u64[]>();
+  }
+
+  mint(name: string, uri: string, toAddress: string): u64 {
+    this.counter += 1;
+    let id = this.counter;
+
+    const tokenMetaData = new TokenMetaData(id, name, uri);
+
+    // beyond this point program fails with `out of memory bound access` error!
+    this.tokens.set(id, tokenMetaData);
+    this.owners.set(id, toAddress);
+
+    if (!this.balances.has(toAddress)) {
+      this.balances.set(toAddress, []);
+    }
+
+    this.balances.get(toAddress).push(id);
+
+    return id;
   }
 }

@@ -30,6 +30,15 @@ register("hello", function (payload: ArrayBuffer): Result<ArrayBuffer> {
   let obj = new JSON.Obj();
   obj.set("message", "OK");
   obj.set("data", data);
+  let m = obj.get("message")
+  let d = obj.get("data")
+
+  let keys = obj.keys.toString()
+  if (m != null && d != null) {
+    consoleLog("keys v"+ m.toString() + " " + d.toString());
+  } else {
+    consoleLog("empty"+ (m == null ? "m" : "d"));
+  }
   let json = obj.toString()
   return Result.ok(String.UTF8.encode(json));
   // // Create encoder

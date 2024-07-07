@@ -2,8 +2,8 @@
   "entries": [
     "./assembly/index.ts"
   ],
+  "extends": "./node_modules/@assemblyscript/wasi-shim/asconfig.json",
   "options": {
-    "importTable": true,
-    "transform": ["json-as/transform"]
+    "importTable": true
   }
 }
